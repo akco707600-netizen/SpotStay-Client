@@ -1,0 +1,359 @@
+﻿<Window x:Class="코빚노_프로젝트.StayListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="주변 숙소"
+        Width="1050"
+        Height="700"
+        WindowStartupLocation="CenterOwner"
+        Background="#F7F8FA"
+        FontFamily="Malgun Gothic">
+
+    <Window.Resources>
+
+        <Style x:Key="SortChipButton" TargetType="Button">
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#888888"/>
+            <Setter Property="BorderBrush" Value="#E8E8E8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="12"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SortChipOnButton" TargetType="Button" BasedOn="{StaticResource SortChipButton}">
+            <Setter Property="Background" Value="#333333"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#333333"/>
+        </Style>
+
+        <Style x:Key="YellowRoundButton" TargetType="Button">
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Background" Value="#FFCC00"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SiteButton" TargetType="Button">
+            <Setter Property="Height" Value="26"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#555555"/>
+            <Setter Property="BorderBrush" Value="#E8E8E8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate x:Key="HotelCardTemplate">
+            <Border Background="White"
+                    CornerRadius="0"
+                    Padding="14,12"
+                    BorderBrush="#F5F5F5"
+                    BorderThickness="0,0,0,1">
+                <StackPanel>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="26"/>
+                            <ColumnDefinition Width="62"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="90"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0"
+                                Width="22"
+                                Height="22"
+                                CornerRadius="11"
+                                Background="#F0F0F0"
+                                VerticalAlignment="Center">
+                            <TextBlock Text="{Binding No}"
+                                       FontSize="11"
+                                       FontWeight="Bold"
+                                       Foreground="#888888"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+
+                        <Border Grid.Column="1"
+                                Width="52"
+                                Height="52"
+                                CornerRadius="10"
+                                Background="#F7F8FA"
+                                VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Icon}"
+                                       FontSize="25"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+
+                        <StackPanel Grid.Column="2"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,8,0">
+                            <TextBlock Text="{Binding Name}"
+                                       FontSize="13"
+                                       FontWeight="Bold"
+                                       Foreground="#222222"
+                                       TextTrimming="CharacterEllipsis"/>
+
+                            <TextBlock Text="{Binding HotelType}"
+                                       FontSize="10"
+                                       Foreground="#AAAAAA"
+                                       Margin="0,2,0,0"/>
+
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0,6,0,0">
+                                <Border Background="#E8F4FF"
+                                        CornerRadius="8"
+                                        Padding="8,2"
+                                        Margin="0,0,5,0">
+                                    <TextBlock Text="{Binding Distance}"
+                                               FontSize="10"
+                                               FontWeight="Bold"
+                                               Foreground="#1A73E8"/>
+                                </Border>
+
+                                <TextBlock Text="{Binding Rating}"
+                                           FontSize="11"
+                                           FontWeight="Bold"
+                                           Foreground="#FFCC00"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,5,0"/>
+
+                                <TextBlock Text="{Binding ReviewText}"
+                                           FontSize="10"
+                                           Foreground="#BBBBBB"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <TextBlock Grid.Column="3"
+                                   Text="{Binding Price}"
+                                   FontSize="12"
+                                   FontWeight="ExtraBold"
+                                   Foreground="#222222"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Top"
+                                   TextAlignment="Right"
+                                   TextWrapping="Wrap"/>
+                    </Grid>
+
+                    <StackPanel Orientation="Horizontal"
+                                Margin="32,8,0,0">
+                        <Border Background="#FFFBEA"
+                                CornerRadius="6"
+                                Padding="7,2"
+                                Margin="0,0,4,0">
+                            <TextBlock Text="{Binding Tag1}"
+                                       FontSize="10"
+                                       Foreground="#A07800"/>
+                        </Border>
+
+                        <Border Background="#E8F4FF"
+                                CornerRadius="6"
+                                Padding="7,2"
+                                Margin="0,0,4,0">
+                            <TextBlock Text="{Binding Tag2}"
+                                       FontSize="10"
+                                       Foreground="#1A73E8"/>
+                        </Border>
+
+                        <Border Background="#EAFAF1"
+                                CornerRadius="6"
+                                Padding="7,2">
+                            <TextBlock Text="{Binding Tag3}"
+                                       FontSize="10"
+                                       Foreground="#1A7A4A"/>
+                        </Border>
+                    </StackPanel>
+
+                    <Button Content="🔗 예약하기"
+        Style="{StaticResource YellowRoundButton}"
+        Margin="0,10,0,0"
+        Click="BtnBookStay_Click"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+    </Window.Resources>
+
+    <Border Margin="10"
+            Background="#F7F8FA"
+            BorderBrush="#E0E0E0"
+            BorderThickness="1"
+            CornerRadius="12"
+            ClipToBounds="True">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="58"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+           
+            <!-- 상단 네비 -->
+            <Border Grid.Row="1"
+                    Background="White"
+                    BorderBrush="#ECECEC"
+                    BorderThickness="0,1,0,1"
+                    Padding="16,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130"/>
+                        <ColumnDefinition Width="190"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0"
+                            Content="← 지도로 돌아가기"
+                            Height="32"
+                            Background="#F7F8FA"
+                            BorderBrush="#E8E8E8"
+                            BorderThickness="1"
+                            FontSize="12"
+                            Foreground="#555555"
+                            Cursor="Hand"
+                            Click="BtnBack_Click"/>
+
+                    <Border Grid.Column="1"
+                            Background="#FFFBEA"
+                            BorderBrush="#FFCC00"
+                            BorderThickness="1.5"
+                            CornerRadius="20"
+                            Padding="12,0"
+                            Margin="10,0,0,0">
+                        <TextBlock x:Name="TxtOriginBadge"
+                                   Text="🏔️ 관광지"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="#A07800"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"/>
+                    </Border>
+
+                    <TextBlock Grid.Column="2"
+                               Text="주변 숙소"
+                               FontSize="15"
+                               FontWeight="ExtraBold"
+                               Foreground="#222222"
+                               VerticalAlignment="Center"
+                               Margin="12,0,0,0"/>
+
+                    <StackPanel Grid.Column="3"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center">
+                        <TextBlock Text="정렬:"
+                                   FontSize="11"
+                                   Foreground="#BBBBBB"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,6,0"/>
+                        <Button Content="거리순" Style="{StaticResource SortChipOnButton}" Margin="0,0,6,0"/>
+                        <Button Content="별점순" Style="{StaticResource SortChipButton}" Margin="0,0,6,0"/>
+                        <Button Content="가격순" Style="{StaticResource SortChipButton}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- 메인 -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="340"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- 왼쪽 숙소 리스트 -->
+                <Border Grid.Column="0"
+                        Background="White"
+                        BorderBrush="#ECECEC"
+                        BorderThickness="0,0,1,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="86"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0"
+                                    Margin="14,12,14,10">
+                            <TextBlock FontSize="13"
+                                       FontWeight="Bold"
+                                       Foreground="#222222">
+                                <Run Text="주변 숙소 "/>
+                                <Run x:Name="TxtStayCount" Text="0" Foreground="#FFCC00"/>
+                                <Run Text="개"/>
+                            </TextBlock>
+
+                            <TextBlock x:Name="TxtStaySub"
+                                       Text="선택 관광지 기준"
+                                       FontSize="11"
+                                       Foreground="#BBBBBB"
+                                       Margin="0,3,0,0"/>
+
+                            
+                        </StackPanel>
+
+                        <ListBox x:Name="StayFullList"
+                                 Grid.Row="1"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 HorizontalContentAlignment="Stretch"
+                                 ItemTemplate="{StaticResource HotelCardTemplate}"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 SelectionChanged="StayFullList_SelectionChanged"/>
+                    </Grid>
+                </Border>
+                <!-- 오른쪽 카카오 지도 패널 -->
+                <Grid Grid.Column="1"
+      Background="#E8E0D0"
+      ClipToBounds="True">
+
+                    <wv2:WebView2 x:Name="StayMapWebView"/>
+
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
